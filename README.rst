@@ -23,6 +23,13 @@ Installs the ``openssh`` server package and service.
 
 Manages SSH certificates for users.
 
+``openssh.auth_map``
+-----------
+
+Same functionality as openssh.auth but with a simplified Pillar syntax.
+Plays nicely with `Pillarstack
+<https://docs.saltstack.com/en/latest/ref/pillar/all/salt.pillar.stack.html>`_.
+
 ``openssh.banner``
 ------------------
 
@@ -50,7 +57,7 @@ so root login will be disabled.
 Manages the site-wide ssh_known_hosts file and fills it with the
 public SSH host keys of all minions. You can restrict the set of minions
 whose keys are listed by using the pillar data ``openssh:known_hosts:target``
-and ``openssh:known_hosts:expr_form`` (those fields map directly to the
+and ``openssh:known_hosts:tgt_type`` (those fields map directly to the
 corresponding attributes of the ``mine.get`` function).
 
 The Salt mine is used to share the public SSH host keys, you must thus
@@ -65,6 +72,7 @@ setup those functions through pillar::
       public_ssh_host_keys:
         mine_function: cmd.run
         cmd: cat /etc/ssh/ssh_host_*_key.pub
+        python_shell: True
       public_ssh_hostname:
         mine_function: grains.get
         key: id

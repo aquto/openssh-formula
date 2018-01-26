@@ -1,14 +1,9 @@
 {% from "openssh/map.jinja" import openssh with context %}
 
-check for existing dig:
-  cmd.run:
-    - name: which dig
-
 ensure dig is available:
   pkg.installed:
     - name: {{ openssh.dig_pkg }}
-    - onfail:
-      - cmd: check for existing dig
+    - unless: which dig
 
 manage ssh_known_hosts file:
   file.managed:
@@ -16,7 +11,7 @@ manage ssh_known_hosts file:
     - source: salt://openssh/files/ssh_known_hosts
     - template: jinja
     - user: root
-    - group: {{ openssh.root_group }}
+    - group: {{ openssh.ssh_config_group }}
     - mode: 644
     - require:
       - pkg: ensure dig is available
